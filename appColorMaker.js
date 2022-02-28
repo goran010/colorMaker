@@ -1,5 +1,5 @@
 const btn = document.querySelector(".btn");
-const btnCopy = document.querySelector(".btn2");
+const btnCopy = document.querySelector(".btnCopy");
 const display = document.querySelector(".display");
 const body = document.querySelector("body");
 const colorValueText = document.querySelector(".colorValueText");
@@ -9,7 +9,6 @@ const hslPage = document.querySelector(".hslPage");
 let curentTypeOfColor = "hex"
 let color = "#fffff"
 let previousTypeOfColor="hex"
-
 hexPage.addEventListener("click", () => {
     curentTypeOfColor = "hex"
     console.log(colorValueText.textContent)
@@ -34,6 +33,12 @@ btn.addEventListener("click", () => {
     if (curentTypeOfColor == "rgb") createRGB()
     if (curentTypeOfColor == "hex") createHEX()
     if (curentTypeOfColor == "hsl") createHSL()
+})
+btnCopy.addEventListener("click", () => {
+    let copyText = String(colorValueText.textContent);
+    navigator.clipboard.writeText(copyText);
+    let tooltip = document.getElementById("myTooltip");
+    tooltip.innerHTML = "Copied: " + copyText;
 })
 
 function createRGB() {
@@ -69,6 +74,7 @@ function createHSL() {
     changeColor(color)
     if (l < 30) makeDarkStyle()
 }
+
 function makeDarkStyle() {
     btn.classList.add("toDark")
     display.style.backgroundColor = "lightgrey";
@@ -79,7 +85,6 @@ function resetDarkStyle() {
     display.style.backgroundColor = "black";
     display.style.color = "white"
 }
-
 function changeColor(color) {
     colorValueText.textContent = color;
     colorValueText.style.color = color;
@@ -147,8 +152,6 @@ function RGBToHSL(color) {
 function HSLToRGB(hsl) {
     return HEXToRGB(HSLToHEX(hsl))
 }
-
-
 function HSLToHEX(hsl) {
     let hue = 0, saturation = 0, lightness = 0;
     let tmp = 0;
@@ -207,8 +210,6 @@ function HSLToHEX(hsl) {
     color=`${hex}`
     return color;
 }
-
-    
 
     
 function changeColorName(color, previousTypeOfColor, curentTypeOfColor) {
