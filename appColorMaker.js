@@ -6,29 +6,26 @@ const colorValueText = document.querySelector(".colorValueText");
 const hexPage = document.querySelector(".hexPage");
 const rgbPage = document.querySelector(".rgbPage");
 const hslPage = document.querySelector(".hslPage");
-let curentTypeOfColor = "hex"
-let color = "#fffff"
-let previousTypeOfColor="hex"
+let curentTypeOfColor = "hex";
+let color = "#fffff";
+let previousTypeOfColor = "hex";
+
 hexPage.addEventListener("click", () => {
     curentTypeOfColor = "hex"
-    console.log(colorValueText.textContent)
     if (previousTypeOfColor !== "hex") changeColorName(colorValueText.textContent, previousTypeOfColor, curentTypeOfColor)
     previousTypeOfColor="hex"
 })
 rgbPage.addEventListener("click", () => {
     curentTypeOfColor = "rgb"
-    console.log(colorValueText.textContent)
     if (previousTypeOfColor !== "rgb") changeColorName(colorValueText.textContent, previousTypeOfColor, curentTypeOfColor)
     previousTypeOfColor = "rgb"
 })
 hslPage.addEventListener("click", () => {
     curentTypeOfColor = "hsl"
-    console.log(colorValueText.textContent)
     if (previousTypeOfColor !== "hsl") changeColorName(colorValueText.textContent, previousTypeOfColor, curentTypeOfColor)
     previousTypeOfColor = "hsl"
 })
 
- 
 btn.addEventListener("click", () => {
     if (curentTypeOfColor == "rgb") createRGB()
     if (curentTypeOfColor == "hex") createHEX()
@@ -70,33 +67,36 @@ function createHSL() {
     let h = Math.floor(Math.random() * 360);
     let s = Math.floor(Math.random() * 100);
     let l = Math.floor(Math.random() * 100);
-    color = `hsl(${h},${s}%,${l}%)`
-    changeColor(color)
+    changeColor(`hsl(${h},${s}%,${l}%)`)
     if (l < 30) makeDarkStyle()
 }
 
 function makeDarkStyle() {
-    btn.classList.add("toDark")
+    btn.classList.add("lightTeame")
+    btn.classList.add("lightBtn ")
+    btnCopy.classList.add("lightTeame")
     display.style.backgroundColor = "lightgrey";
     display.style.color = "black";
 }
 function resetDarkStyle() {
     btn.classList.remove("lightTeame")
+    btnCopy.classList.remove("lightTeame")
     display.style.backgroundColor = "black";
     display.style.color = "white"
 }
+
 function changeColor(color) {
     colorValueText.textContent = color;
     colorValueText.style.color = color;
     body.style.backgroundColor = color;
 }
 
-function HEXToRGB(hex) {
-    arr = ['0x' + hex[1] + hex[2] | 0, '0x' + hex[3] + hex[4] | 0, '0x' + hex[5] + hex[6] | 0];
+function HEXToRGB(color) {
+    arr = ['0x' + color[1] + color[2] | 0, '0x' + color[3] + color[4] | 0, '0x' + color[5] + color[6] | 0];
     return `rgb(${arr[0]},${arr[1]},${arr[2]})`
 }
-function HEXToHSL(hex) {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+function HEXToHSL(color) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color);
     var r = parseInt(result[1], 16);
     var g = parseInt(result[2], 16);
     var b = parseInt(result[3], 16);
@@ -104,7 +104,7 @@ function HEXToHSL(hex) {
     var max = Math.max(r, g, b), min = Math.min(r, g, b);
     var h, s, l = (max + min) / 2;
     if (max == min) {
-        h = s = 0; // achromatic
+        h = s = 0; 
     } else {
         var d = max - min;
         s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
@@ -115,48 +115,38 @@ function HEXToHSL(hex) {
         }
         h /= 6;
     }
-    s = s * 100;
-    s = Math.round(s);
-    l = l * 100;
-    l = Math.round(l);
+    s = Math.round((s*100));
+    l = Math.round(l*100);
     h = Math.round(360 * h);
-
-    let color = 'hsl(' + h + ', ' + s + '%, ' + l + '%)';
-    console.log(color)
-    return color;
+    return 'hsl(' + h + ', ' + s + '%, ' + l + '%)';
 }
 
 function RGBToHEX(color) {
-        color = "" + color;
-        if (!color || color.indexOf("rgb") < 0) {
-            return;
-        }
-        if (color.charAt(0) == "#") {
-            return color;
-        }
-        var nums = /(.*?)rgb\((\d+),\s*(\d+),\s*(\d+)\)/i.exec(color),
-            r = parseInt(nums[2], 10).toString(16),
-            g = parseInt(nums[3], 10).toString(16),
-            b = parseInt(nums[4], 10).toString(16);
-        color= "#" + (
-            (r.length == 1 ? "0" + r : r) +
-            (g.length == 1 ? "0" + g : g) +
-            (b.length == 1 ? "0" + b : b)
-    );
-    return `${color}`
-}
+    color = "" + color;
+    if (!color || color.indexOf("rgb") < 0) {
+        return;
+    }
+    if (color.charAt(0) == "#") {
+        return color;
+    }
+    var nums = /(.*?)rgb\((\d+),\s*(\d+),\s*(\d+)\)/i.exec(color),
+        r = parseInt(nums[2], 10).toString(16),
+        g = parseInt(nums[3], 10).toString(16),
+        b = parseInt(nums[4], 10).toString(16);
+    return "#"+ ((r.length == 1 ? "0" + r : r) + (g.length == 1 ? "0" + g : g) + (b.length == 1 ? "0" + b : b))
+    }
 function RGBToHSL(color) {
     return HEXToHSL(RGBToHEX(color));
 }
 
-function HSLToRGB(hsl) {
-    return HEXToRGB(HSLToHEX(hsl))
+function HSLToRGB(color) {
+    return HEXToRGB(HSLToHEX(color))
 }
-function HSLToHEX(hsl) {
+function HSLToHEX(color) {
     let hue = 0, saturation = 0, lightness = 0;
     let tmp = 0;
-    for (let i = 0, j = 0, k = 0; i < hsl.length; i++) {
-        let ch = hsl.charCodeAt(i);
+    for (let i = 0, j = 0, k = 0; i < color.length; i++) {
+        let ch = color.charCodeAt(i);
         if (ch >= 48 && ch <= 57) {
             tmp = tmp * 10 + (ch - 48);
             k = 1;
@@ -207,15 +197,11 @@ function HSLToHEX(hsl) {
     k = (b & 0xf) + 48;
     if (k > 57) k += 7;
     hex += String.fromCharCode(k);
-    color=`${hex}`
-    return color;
+    return `${hex}`
 }
 
-    
 function changeColorName(color, previousTypeOfColor, curentTypeOfColor) {
-
     if (curentTypeOfColor === "rgb" || previousTypeOfColor === "hex") {
-        console.log(String(HEXToRGB(color)))
         colorValueText.textContent = HEXToRGB(color);
     }
     if (curentTypeOfColor === "hsl" && previousTypeOfColor === "hex") {
